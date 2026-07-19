@@ -19,13 +19,14 @@ function handleSubmit(e) {
   e.preventDefault();
 
   clearGallery();
-  showLoader();
 
   const query = input.value.trim();
 
   if (!query) {
     return;
   }
+
+  showLoader();
 
   getImagesByQuery(query)
     .then(images => {
