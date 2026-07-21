@@ -8,27 +8,37 @@ const galleryList = document.querySelector('.gallery'),
 
 export function createGallery(images) {
   const markup = images
-    .map(image => {
-      return `<li class="gallery-item">
-<a href="${image.largeImageURL}">
-<img src="${image.webformatURL}" alt="${image.tags}" width="360" height="152">
+    .map(
+      ({
+        largeImageURL,
+        webformatURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => {
+        return `<li class="gallery-item">
+<a href="${largeImageURL}">
+<img src="${webformatURL}" alt="${tags}" width="360" height="152">
 </a>
 <ul class="image-info-list">
 <li class="image-info-item">Likes
-<p>${image.likes}</p>
+<p>${likes}</p>
 </li>
 <li class="image-info-item">Views
-<p>${image.views}</p>
+<p>${views}</p>
 </li>
 <li class="image-info-item">Comments
-<p>${image.comments}</p>
+<p>${comments}</p>
 </li>
 <li class="image-info-item">Downloads
-<p>${image.downloads}</p>
+<p>${downloads}</p>
 </li>
 </ul>
 </li>`;
-    })
+      }
+    )
     .join('');
 
   galleryList.innerHTML = markup;
