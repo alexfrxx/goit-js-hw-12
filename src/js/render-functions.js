@@ -7,6 +7,12 @@ const galleryList = document.querySelector('.gallery'),
   loader = document.querySelector('.loader'),
   loadMoreBtn = document.querySelector('.load-more-btn');
 
+let gallery = new SimpleLightbox('.gallery a', {
+  captions: true,
+  captionsData: 'alt',
+  captionDelay: 250,
+});
+
 export function createGallery(images) {
   const markup = images
     .map(
@@ -77,9 +83,3 @@ export function scrollByCardHeight() {
     behavior: 'smooth',
   });
 }
-
-let gallery = new SimpleLightbox('.gallery a', {
-  captions: true,
-  captionsData: 'alt',
-  captionDelay: 250,
-});

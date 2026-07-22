@@ -18,48 +18,52 @@ const form = document.querySelector('form'),
   loadMoreBtn = document.querySelector('.load-more-btn');
 
 let page = 1;
+let perPage = 15;
 let query;
 
 form.addEventListener('submit', handleSubmit);
 loadMoreBtn.addEventListener('click', handleClick);
 
-function handleSubmit(e) {
-  e.preventDefault();
+async function handleSubmit(e) {
+  try {
+    e.preventDefault();
 
-  hideLoadMoreButton();
-  clearGallery();
+    hideLoadMoreButton();
+    clearGallery();
 
-  query = input.value.trim();
+    query = input.value.trim();
 
-  if (!query) {
-    return;
-  }
+    if (!query) {
+      return;
+    }
 
-  showLoader();
+    showLoader();
 
-  getImagesByQuery(query, page)
-    .then(images => {
-      if (!images.hits.length) {
-        hideLoadMoreButton();
-        hideLoader();
-        showToast(
-          'Sorry, there are no images matching your search query. Please, try again!'
-        );
-        return;
-      } else {
-        hideLoader();
-        createGallery(images.hits);
-        scrollByCardHeight();
-        showLoadMoreButton();
-        page += 1;
-      }
-    })
-    .catch(error => {
+    const response = await getImagesByQuery(query, page);
+
+    if (!response.hits.length) {
       hideLoadMoreButton();
       hideLoader();
-      showToast();
+      showToast(
+        'Sorry, there are no images matching your search query. Please, try again!'
+      );
       page = 1;
-    });
+      return;
+    } else {
+      hideLoader();
+      createGallery(response.hits);
+      scrollByCardHeight();
+      showLoadMoreButton();
+      page += 1;
+    }
+  } catch (error) {
+    hideLoadMoreButton();
+    hideLoader();
+    showToast(
+      'Sorry, there are no images matching your search query. Please, try again!'
+    );
+    page = 1;
+  }
 }
 
 function showToast(str) {
@@ -74,29 +78,33 @@ function showToast(str) {
   });
 }
 
-function handleClick() {
-  getImagesByQuery(query, page)
-    .then(images => {
-      if (page > images.totalHits / 100) {
-        hideLoadMoreButton();
-        showToast("We're sorry, but you've reached the end of search results.");
-      } else if (!images.hits.length) {
-        hideLoadMoreButton();
-        hideLoader();
-        showToast();
-        return;
-      } else {
-        hideLoader();
-        createGallery(images.hits);
-        scrollByCardHeight();
-        showLoadMoreButton();
-        page += 1;
-      }
-    })
-    .catch(error => {
+async function handleClick() {
+  try {
+    showLoader();
+
+    const response = await getImagesByQuery(query, page);
+
+    if (page > response.totalHits / perPage) {
+      hideLoader();
+      hideLoadMoreButton();
+      showToast("We're sorry, but you've reached the end of search results.");
+    } else if (!response.hits.length) {
       hideLoadMoreButton();
       hideLoader();
       showToast();
-      page = 1;
-    });
+      return;
+    } else {
+      hideLoadMoreButton();
+      hideLoader();
+      createGallery(response.hits);
+      scrollByCardHeight();
+      showLoadMoreButton();
+      page += 1;
+    }
+  } catch (error) {
+    hideLoadMoreButton();
+    hideLoader();
+    showToast("We're sorry, but you've reached the end of search results.");
+    page = 1;
+  }
 }
