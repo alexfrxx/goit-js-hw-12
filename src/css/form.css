@@ -28,7 +28,7 @@ input[name='search-text']:active {
   border: 1px solid #4e75ff;
 }
 
-button[type='submit'] {
+button {
   border-radius: 8px;
   padding: 8px 16px;
   background: #4e75ff;
@@ -41,8 +41,8 @@ button[type='submit'] {
   transition: background 0.3s ease;
 }
 
-button[type='submit']:hover,
-button[type='submit']:focus {
+button:hover,
+button:focus {
   background: #6c8cff;
 }
 
@@ -93,4 +93,18 @@ button[type='submit']:focus {
   letter-spacing: 0.04em;
   color: #2e2f42;
   text-align: center;
+}
+
+.load-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 32px;
+}
+
+.load-more-btn {
+  display: none;
+}
+
+.active {
+  display: block;
 }

@@ -4,7 +4,8 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const galleryList = document.querySelector('.gallery'),
-  loader = document.querySelector('.loader');
+  loader = document.querySelector('.loader'),
+  loadMoreBtn = document.querySelector('.load-more-btn');
 
 export function createGallery(images) {
   const markup = images
@@ -41,7 +42,7 @@ export function createGallery(images) {
     )
     .join('');
 
-  galleryList.innerHTML = markup;
+  galleryList.insertAdjacentHTML('beforeend', markup);
 
   gallery.refresh();
 }
@@ -54,8 +55,27 @@ export function showLoader() {
   loader.classList.add('load');
 }
 
+export function showLoadMoreButton() {
+  loadMoreBtn.classList.add('load');
+}
+
+export function hideLoadMoreButton() {
+  loadMoreBtn.classList.remove('load');
+}
+
 export function hideLoader() {
   loader.classList.remove('load');
+}
+
+export function scrollByCardHeight() {
+  const card = document.querySelector('.gallery-item');
+
+  const { height } = card.getBoundingClientRect();
+
+  window.scrollBy({
+    top: height * 2,
+    behavior: 'smooth',
+  });
 }
 
 let gallery = new SimpleLightbox('.gallery a', {
