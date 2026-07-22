@@ -10,12 +10,12 @@ import {
   hideLoader,
   showLoadMoreButton,
   hideLoadMoreButton,
-  scrollByCardHeight,
 } from './js/render-functions';
 
 const form = document.querySelector('form'),
   input = document.querySelector('input[type="text"]'),
-  loadMoreBtn = document.querySelector('.load-more-btn');
+  loadMoreBtn = document.querySelector('.load-more-btn'),
+  card = document.querySelector('.gallery-item');
 
 let page = 1;
 let perPage = 15;
@@ -43,7 +43,14 @@ async function handleSubmit(e) {
 
     const response = await getImagesByQuery(query, page);
 
-    if (!response.hits.length) {
+    if (response.totalHits <= perPage) {
+      hideLoadMoreButton();
+      hideLoader();
+      showToast(
+        'Sorry, there are no images matching your search query. Please, try again!'
+      );
+      page = 1;
+    } else if (!response.hits.length) {
       hideLoadMoreButton();
       hideLoader();
       showToast(
@@ -53,7 +60,6 @@ async function handleSubmit(e) {
     } else {
       hideLoader();
       createGallery(response.hits);
-      scrollByCardHeight();
       showLoadMoreButton();
       page += 1;
     }
@@ -87,6 +93,7 @@ async function handleClick() {
     const response = await getImagesByQuery(query, page);
 
     if (page * perPage >= response.totalHits) {
+      createGallery(response.hits);
       hideLoader();
       hideLoadMoreButton();
       showToast("We're sorry, but you've reached the end of search results.");
@@ -108,4 +115,13 @@ async function handleClick() {
     showToast("We're sorry, but you've reached the end of search results.");
     page = 1;
   }
+}
+
+function scrollByCardHeight() {
+  const { height } = card.getBoundingClientRect();
+
+  window.scrollBy({
+    top: height * 2,
+    behavior: 'smooth',
+  });
 }

@@ -72,14 +72,3 @@ export function hideLoadMoreButton() {
 export function hideLoader() {
   loader.classList.remove('load');
 }
-
-export function scrollByCardHeight() {
-  const card = document.querySelector('.gallery-item');
-
-  const { height } = card.getBoundingClientRect();
-
-  window.scrollBy({
-    top: height * 2,
-    behavior: 'smooth',
-  });
-}
