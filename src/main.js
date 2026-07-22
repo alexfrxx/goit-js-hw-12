@@ -28,6 +28,8 @@ async function handleSubmit(e) {
   try {
     e.preventDefault();
 
+    page = 1;
+
     hideLoadMoreButton();
     clearGallery();
 
@@ -47,7 +49,6 @@ async function handleSubmit(e) {
       showToast(
         'Sorry, there are no images matching your search query. Please, try again!'
       );
-      page = 1;
       return;
     } else {
       hideLoader();
@@ -80,21 +81,21 @@ function showToast(str) {
 
 async function handleClick() {
   try {
+    hideLoadMoreButton();
     showLoader();
 
     const response = await getImagesByQuery(query, page);
 
-    if (page > response.totalHits / perPage) {
+    if (page * perPage >= response.totalHits) {
       hideLoader();
       hideLoadMoreButton();
       showToast("We're sorry, but you've reached the end of search results.");
     } else if (!response.hits.length) {
       hideLoadMoreButton();
       hideLoader();
-      showToast();
+      showToast("We're sorry, but you've reached the end of search results.");
       return;
     } else {
-      hideLoadMoreButton();
       hideLoader();
       createGallery(response.hits);
       scrollByCardHeight();
